@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            ParamBox.js: Example One
+        </title>
+        <!-- Load jquery -->
+        <script src="jquery.min.js">
+        </script>
+        <!-- Load Chart.js -->
+        <script src="Chart.bundle.js">
+        </script>
+        <!-- Load Bootstrap -->
+        <script src="bootstrap.min.js">
+        </script>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css"/>
+        <!-- Load Parambox -->
+        <script src="../lib/experimentBoxes.max.js" type="text/javascript">
+        </script>
+        <script type="text/javascript">
+            var paramBox = null;
+
+            window.exampleObject = {
+                selectedColor:"red",
+                textForSelected: "is currently selected",
+                selectedHeight: 400,
+                sizeForNonSelected: 100,
+                nestedObject: {
+                    usefullField: "Very interesting nest object field value",
+                    anotherOne: "Indeed!",
+                    thisOneIsTheBoss: "What's the Yams?!"
+                },
+                allColors: ["red", "blue", "yellow", "green"],
+                update: function () {
+                    var listDivs = document.getElementsByClassName("coloredDiv");
+
+                    for (var i = 0; i < listDivs.length; i++) {
+                        listDivs[i].style.height = "50px";
+                        listDivs[i].innerHTML = "<center>Not Selected</center>";
+                    }
+
+                    var selectedDiv = document.getElementsByClassName(this.selectedColor)[0];
+                    selectedDiv.style.height = this.selectedHeight+"px";
+                    selectedDiv.innerHTML = "<center>"+ this.selectedColor.toUpperCase() + " " +this.textForSelected+"</center><br/>"+this.nestedObject.usefullField;
+                }
+            };
+
+            /* list of tweakable variables from the paramBox */
+            var parametersNames = ["selectedColor", "textForSelected", "selectedHeight"
+            , "nestedObject.usefullField", "nestedObject.anotherOne", "nestedObject.thisOneIsTheBoss"];
+
+            var parametersConstraints = {
+              selectedColor: ["red",
+                "blue",
+                "yellow",
+                "green"]
+            };
+
+            document.addEventListener("DOMContentLoaded", function(event) {
+
+                /* if ParamBox library is loaded - create one */
+                if (typeof ParamBox === "function") {
+                  paramBox = new ParamBox();
+                  paramBox.bind(window.exampleObject, parametersNames, parametersConstraints);
+                }
+
+                window.setInterval(function(){
+                   window.exampleObject.update();
+                },100);
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <br/>
+            <br/>
+            To open the paramBox hit shift + P
+            <br/>
+            <br/>
+            <div class="coloredDiv red col-xs-12" style="background:red; color:white;">
+            </div>
+            <div class="coloredDiv blue col-xs-12" style="background:blue; color:white;">
+            </div>
+            <div class="coloredDiv yellow col-xs-12" style="background:yellow; color:black;">
+            </div>
+            <div class="coloredDiv green col-xs-12" style="background:green; color:white;">
+            </div>
+        </div>
+    </body>
+</html>
