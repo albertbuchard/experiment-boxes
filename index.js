@@ -11,7 +11,7 @@
  * LICENSE MIT
  */
 
-import { DragBox, ParamBox, SmartChart, SmartModal, BindedField, BindedProperty } from './lib/experimentBoxes'
+import { DragBox, ParamBox, SmartChart, SmartModal, BindedField, BindedProperty } from './lib/experimentBoxes.max'
 
 
 export {
