@@ -1731,6 +1731,17 @@ expand-range@^1.8.1:
   dependencies:
     fill-range "^2.1.0"
 
+experiment-mathjs@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/experiment-mathjs/-/experiment-mathjs-3.10.1.tgz#02c0c8d45c05b8daa72ea2e7abff32a8bc5de3d9"
+  dependencies:
+    complex.js "2.0.1"
+    decimal.js "7.1.1"
+    fraction.js "4.0.0"
+    seed-random "2.2.0"
+    tiny-emitter "1.0.2"
+    typed-function "0.10.5"
+
 expose-loader@^0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/expose-loader/-/expose-loader-0.7.3.tgz#35fbd3659789e4faa81f59de8b7e9fc39e466d51"
@@ -2937,17 +2948,6 @@ makeerror@1.0.x:
   resolved "https://registry.yarnpkg.com/makeerror/-/makeerror-1.0.11.tgz#e01a5c9109f2af79660e4e8b9587790184f5a96c"
   dependencies:
     tmpl "1.0.x"
-
-mathjs@^3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-3.10.0.tgz#cae0a27340483a00499253fb2c82f5818b9683fe"
-  dependencies:
-    complex.js "2.0.1"
-    decimal.js "7.1.1"
-    fraction.js "4.0.0"
-    seed-random "2.2.0"
-    tiny-emitter "1.0.2"
-    typed-function "0.10.5"
 
 media-typer@0.3.0:
   version "0.3.0"
