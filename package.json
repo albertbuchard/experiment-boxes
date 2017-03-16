@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack --progress --colors --watch",
     "prod": "PROD_ENV=1 webpack --progress --colors --watch",
-    "patchPublish": "npm version patch && npm publish"
+    "publish": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "babel-eslint": "^7.1.1",
     "babel-jest": "^19.0.0",
     "babel-loader": "^6.3.2",
-    "babel-preset-env": "^1.2.0", 
+    "babel-preset-env": "^1.2.0",
     "babel-preset-flow": "^6.23.0",
     "coveralls": "^2.12.0",
     "cross-env": "^3.2.3",
