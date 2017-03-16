@@ -1,6 +1,6 @@
 {
   "name": "experiment-boxes",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Toys to easilly handle parameters while developping javascript task",
   "main": "index.js",
   "author": "Albert Buchard",
