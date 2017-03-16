@@ -40,10 +40,10 @@ export default {
     extensions: ['.js', '.jsx'],
   },
   externals: {
-    chartjs: 'Chart',
-    lodash: '_',
-    jquery: 'jQuery',
-    mathjs: 'math',
+    Chart: 'chart',
+    _: 'lodash',
+    jQuery: 'jquery',
+    math: 'mathjs',
   },
   devServer: {
     port: WDS_PORT,
