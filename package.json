@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack --progress --colors --watch",
     "prod": "PROD_ENV=1 webpack --progress --colors --watch",
-    "publish": "npm version patch && npm publish"
+    "patchPublish": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
