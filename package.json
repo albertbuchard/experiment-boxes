@@ -2,7 +2,7 @@
   "name": "experiment-boxes",
   "version": "0.1.22",
   "description": "Toys to easilly handle parameters while developping javascript task",
-  "main": "index.js",
+  "main": "lib/experimentBoxes.max.js",
   "author": "Albert Buchard",
   "license": "Apache-2.0",
   "scripts": {

@@ -1,3 +1,3 @@
-const test = require('./lib/ebjs.js')
+const test = require('./lib/experimentBoxes.max.js')
 
 console.log(test)
