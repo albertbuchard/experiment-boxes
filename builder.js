@@ -19,7 +19,7 @@ import BindedProperty from './src/BindedProperty'
 import BindedField from './src/BindedField'
 import { findAllIndices } from './src/utilities'
 
-if ((typeof window !== 'undefined') && (typeof process === 'undefined')) {
+if (typeof window !== 'undefined') {
   window.DragBox = DragBox
   window.ParamBox = ParamBox
   window.SmartModal = SmartModal
