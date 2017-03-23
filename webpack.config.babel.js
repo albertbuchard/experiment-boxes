@@ -1,8 +1,4 @@
-// @flow
-
-// import path from 'path'
 import webpack from 'webpack'
-
 
 const WDS_PORT = 7000
 
@@ -40,10 +36,10 @@ export default {
     extensions: ['.js', '.jsx'],
   },
   externals: {
-    chartjs: true,
-    lodash: true,
-    jquery: true,
-    'experiment-mathjs': true,
+    jquery: 'jQuery',
+    chartjs: 'Chart',
+    lodash: '_',
+    'experiment-mathjs': 'math',
   },
   devServer: {
     port: WDS_PORT,
