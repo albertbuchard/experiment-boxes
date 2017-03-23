@@ -7,6 +7,10 @@ const PROD = JSON.parse(process.env.PROD_ENV || '0')
 const libraryName = 'experimentBoxes'
 const outputFile = `${libraryName}${PROD ? '.min' : '.max'}.js`
 const plugins = [
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery',
+  }),
   new webpack.optimize.OccurrenceOrderPlugin(),
 ]
 const prodPlugins = plugins.concat(new webpack.optimize.UglifyJsPlugin())
