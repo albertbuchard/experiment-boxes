@@ -1,23 +1,15 @@
 import webpack from 'webpack'
 
-const WDS_PORT = 7000
-
 const PROD = JSON.parse(process.env.PROD_ENV || '0')
 
 const libraryName = 'experimentBoxes'
 const outputFile = `${libraryName}${PROD ? '.min' : '.max'}.js`
 const plugins = [
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-  }),
   new webpack.optimize.OccurrenceOrderPlugin(),
 ]
 const prodPlugins = plugins.concat(new webpack.optimize.UglifyJsPlugin())
-// not really working
 export default {
   entry: './builder.js',
-  target: 'web',
   output: {
     path: `${__dirname}/lib`,
     filename: outputFile,
@@ -40,14 +32,29 @@ export default {
     extensions: ['.js', '.jsx'],
   },
   externals: {
-    jquery: 'jQuery',
-    chartjs: 'Chart',
-    lodash: '_',
-    'experiment-mathjs': 'math',
-  },
-  devServer: {
-    port: WDS_PORT,
-    hot: true,
-  },
+    jquery: {
+      commonjs: 'jQuery',
+      commonjs2: 'jQuery',
+      amd: 'jQuery',
+      root: 'jQuery',
+    },
+    chartjs: {
+      commonjs: 'chartjs',
+      commonjs2: 'chartjs',
+      amd: 'chartjs',
+      root: 'Chart',
+    },
+    lodash: {
+      commonjs: 'lodash',
+      commonjs2: 'lodash',
+      amd: 'lodash',
+      root: '_',
+    },
+    'experiment-mathjs': {
+      commonjs: 'experiment-mathjs',
+      commonjs2: 'experiment-mathjs',
+      amd: 'experiment-mathjs',
+      root: 'math',
+    } },
   plugins: PROD ? prodPlugins : plugins,
 }
