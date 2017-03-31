@@ -9,6 +9,10 @@ export default class DragBox {
       global.window = {}
     }
 
+    this.freeHeight = true
+    if (height !== null) {
+      this.freeHeight = false
+    }
     // constants
     this.MAX_BINDED_PROPERTIES = 15
     this.INIT_WIDTH = width || 400
@@ -131,26 +135,28 @@ export default class DragBox {
   // size methods
   updateSize() {
     $(this.boxElement).width(this.width)
-    $(this.boxElement).height(this.height)
-
-    const contentHeight = this.height - this.TITLE_HEIGHT - this.FOOTER_HEIGHT - 7
-
-    const thisObject = this
-    $(this.boxElement).animate({
-      height: thisObject.height,
-      width: thisObject.width,
-    }, 25, () => {})
-
-    $(this.boxElement)
-      .find('.dragbox-container')
-      .animate({
-        height: thisObject.height,
-      }, 25, () => {})
-    $(this.boxElement)
-      .find('.dragbox-content')
-      .animate({
-        height: contentHeight,
-      }, 25, () => {})
+    if (!this.freeHeight) {
+      $(this.boxElement).height(this.height)
+      const contentHeight = this.height - this.TITLE_HEIGHT - this.FOOTER_HEIGHT - 7
+      $(this.boxElement).css({
+        height: this.height,
+        width: this.width,
+      })
+      $(this.boxElement)
+        .find('.dragbox-container')
+        .css({
+          height: this.height,
+        })
+      $(this.boxElement)
+        .find('.dragbox-content')
+        .css({
+          height: contentHeight,
+        })
+    } else {
+      $(this.boxElement).css({
+        width: this.width,
+      })
+    }
   }
 
   // drag methods

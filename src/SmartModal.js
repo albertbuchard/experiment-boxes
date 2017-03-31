@@ -99,11 +99,16 @@ export default class SmartModal extends DragBox {
 
     this.width = width
     this.height = height
+ 
 
-    $(this.boxElement).animate({
+    $(this.boxElement).css({
       left: leftPos,
       top: topPos,
-    }, 25, () => {})
+    })
+    // $(this.boxElement).animate({
+    //   left: leftPos,
+    //   top: topPos,
+    // }, 25, () => {})
     return false
   }
 }

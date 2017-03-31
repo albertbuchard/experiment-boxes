@@ -2,6 +2,7 @@ import webpack from 'webpack'
 
 const PROD = JSON.parse(process.env.PROD_ENV || '0')
 
+
 const libraryName = 'experimentBoxes'
 const outputFile = `${libraryName}${PROD ? '.min' : '.max'}.js`
 const plugins = [

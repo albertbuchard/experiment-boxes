@@ -8,24 +8,27 @@
   "scripts": {
     "build": "webpack --progress --colors --watch",
     "prod": "PROD_ENV=1 webpack --progress --colors --watch",
-    "patchPublish": "npm version patch && npm publish"
+    "patchPublish": "npm version patch && npm publish",
+    "devserver": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
     "url": ""
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-core": "^6.23.1",
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
     "babel-eslint": "^7.1.1",
     "babel-jest": "^19.0.0",
-    "babel-loader": "^6.3.2",
-    "babel-preset-env": "^1.2.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-env": "^1.3.2",
     "babel-preset-flow": "^6.23.0",
     "coveralls": "^2.12.0",
     "cross-env": "^3.2.3",
-    "eslint": "^3.17.0",
+    "eslint": "^3.18.0",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-flowtype": "^2.30.3",
+    "eslint-plugin-html": "^2.0.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
