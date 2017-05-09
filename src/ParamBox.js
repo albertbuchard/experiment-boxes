@@ -72,7 +72,7 @@ export default class ParamBox extends DragBox {
     this.subtitleRows = {}
 
     // set dragbox title
-    this.title = '<h5><i class="fa fa-cog fa-1x"></i> Parameter Box</h5>'
+    this.title = '<h4><i class="fa fa-cog fa-1x"></i> Parameter Box</h4>'
 
     // set overflow
     this.overflow = 'scroll'
@@ -93,7 +93,7 @@ export default class ParamBox extends DragBox {
   }
 
   // binding methods
-  bind(object, properties, constraints = null) {
+  bind(object, properties, options = null) {
     if (typeof object === 'undefined') {
       throw new Error('object is undefined')
     }
@@ -110,7 +110,7 @@ export default class ParamBox extends DragBox {
       const objectTemp = objectHierarchy[0]
       const property = objectHierarchy[1]
 
-      const underscoredHierarchy = properties[i].replace(/\./g, '_')
+      const underscoredHierarchy = properties[i].replace(/\./g, '')
       const subtitle = properties[i].substring(0, properties[i].lastIndexOf('.'))
 
       const rowDom = this.newRowInDom(subtitle)
@@ -123,34 +123,36 @@ export default class ParamBox extends DragBox {
       }
 
       // look for a constrained field
-      if (constraints !== null) {
-        if (typeof constraints[properties[i]] !== 'undefined') {
-          const constraintValues = constraints[properties[i]]
+      if ((options !== null) && (typeof options[properties[i]] !== 'undefined')) {
+        let type = options[properties[i]].type || 'input'
+        let constraintValues = null
+        if (options[properties[i]].constructor === Array) {
+          constraintValues = options[properties[i]]
+          type = options[properties[i]].type || 'select'
+        } else if (typeof options[properties[i]].values !== 'undefined') {
+          constraintValues = options[properties[i]].values
+          type = options[properties[i]].type || 'select'
+        }
 
-          if (initialValue !== null) {
-            if (constraintValues.indexOf(initialValue) === -1) {
-              throw new Error(
-                `ParamBox.bind: cannot set initial value to query string value of ${
-                initialValue
-                } because it is not in the constraints array.`,
-              )
-            }
 
-            objectTemp[property] = objectTemp[property].constructor(
-              initialValue,
-            )
+        if (initialValue !== null) {
+          if ((constraintValues !== null) && (type !== 'slider') && (constraintValues.indexOf(initialValue) === -1)) {
+            throw new Error(`ParamBox.bind: cannot set initial value to query string value of ${initialValue} because it is not in the options array.`)
           }
 
-          bindedField = new BindedField(
+          objectTemp[property] = objectTemp[property].constructor(initialValue)
+        }
+
+        bindedField = new BindedField(
             objectTemp,
             property,
             rowDom,
-            'selector',
+            type,
             constraintValues,
             properties[i],
           )
-        }
       }
+
 
       // if no constrained field found, create the most relevant type of field
       if (bindedField === null) {
@@ -163,7 +165,7 @@ export default class ParamBox extends DragBox {
             objectTemp,
             property,
             rowDom,
-            'selector', ['TRUE', 'FALSE'],
+            'select', ['TRUE', 'FALSE'],
             properties[i],
           )
         } else {

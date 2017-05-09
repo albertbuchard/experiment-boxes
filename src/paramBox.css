@@ -13,16 +13,16 @@
       color: #F8F8F5 !important;
       overflow-y: hidden;
   }
-  
+
   .dragbox-gray div h1 {
       color: #F8F8F5;
       ;
   }
-  
+
   .dragbox-gray div {
       color: #F8F8F5;
   }
-  
+
   .dragbox-white-boxshadow {
       z-index: 10;
       position: absolute;
@@ -33,20 +33,20 @@
       -moz-box-shadow: 1px 5px 15px -3px rgba(69, 69, 69, 0.99);
       box-shadow: 1px 5px 15px -3px rgba(69, 69, 69, 0.99);
   }
-  
+
   .dragbox-white-boxshadow div h1 {
       color: #0A0B0D;
   }
-  
+
   .dragbox-white-boxshadow .dragbox-title {
       background: white;
       color: #0A0B0D;
   }
-  
+
   .dragbox-white-boxshadow div {
       color: #0A0B0D;
   }
-  
+
   .parambox-subtitle {
       display: inline-block;
       max-width: 100%;
@@ -58,16 +58,16 @@
       cursor: pointer;
       color: #c1c1c1;
   }
-  
+
   .smartmodal-sendbutton, .smartmodal-closebutton, .smartmodal-nextbutton, .smartmodal-blankbutton, .parambox-savebutton, .parambox-reloadbutton, .parambox-importbutton {
       background: #313D47;
       color: #F3F3F3;
   }
-  
+
   .dragbox-button:focus, .dragbox-button:hover {
       color: rgba(35, 30, 32, 0.9);
   }
-  
+
   .dragbox-title {
       /*
   -webkit-border-radius: 3px 3px 3px 3px;
@@ -75,8 +75,9 @@
     border-radius: 3px 3px 3px 3px;
     */
       background: rgba(55, 55, 50, 1);
+      padding: 12px 12px;
   }
-  
+
   .dragbox-content {
       /*
   -webkit-border-radius: 3px 3px 3px 3px;
@@ -85,24 +86,24 @@
     */
       color: #F8F8F5 !important;
       height: 100%;
+      padding: 0px 12px;
       overflow-y: auto;
   }
-  
+
   .dragbox-container {
       padding: 0 0 0 0 !important;
   }
-  
+
   .dragbox-footer {
       text-align: right;
-      padding-top: 5px;
-      padding-bottom: 3px;
+      padding: 6px 12px;
   }
-  
+
   .chart-canvas {
       width: 100%;
       height: 100%;
   }
-  
+
   .centered {
       vertical-align: middle;
       text-align: center;

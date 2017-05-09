@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import BindedProperty from './BindedProperty'
-import { mandatory } from './utilities'
+import { debugError, mandatory } from './utilities'
 
 export default class BindedField extends BindedProperty {
   // this class holds an active input field (select, text input, slider component)
@@ -16,44 +16,67 @@ export default class BindedField extends BindedProperty {
     super(object, property, hierarchy)
 
     // constant
-    this.VALID_FIELD_TYPE = ['input', 'selector', 'slider']
+    this.VALID_FIELD_TYPE = ['input', 'select', 'slider', 'radio']
 
     // field
-    this.field = null
+    this._field = undefined
     this.fieldType = fieldType
     this.fieldHTML = null
     this.allowedValues = allowedValues
     this.tempClass = `binded-${typeof object}${property}`
+    this.subfields = []
 
     // parent
     this.parent = parent
 
     // build the field html
+    let html = ''
     switch (this.fieldType) {
       case 'input':
-        this.fieldHTML = `<fieldset class="form-group"><label>${property}</label>
+        this.fieldHTML = `<div class="form-group"><label>${property}</label>
         <input type="text" class="form-control ${this.tempClass}" data-binded="${property}">
-        </fieldset>`
+        </div>`
         break
-      case 'selector':
+      case 'select':
         if (!allowedValues) {
           throw new Error('fieldType selector needs at least one allowedValues')
         }
 
-        this.fieldHTML = `<fieldset class="form-group">
+        html += `<div class="form-group">
         <label>${property}</label>
         <select class="form-control ${this.tempClass}" data-binded="${property}">`
 
         for (let i = 0; i < this.allowedValues.length; i++) {
-          this.fieldHTML = `${this.fieldHTML}<option value="${
+          html += `${this.fieldHTML}<option value="${
           this.allowedValues[i]
           }">${
           this.allowedValues[i]
           }</option>`
         }
-        this.fieldHTML = `${this.fieldHTML}</select></fieldset>`
+        this.fieldHTML = `${html}</select></div>`
+        break
+      case 'textaera':
+        this.fieldHTML = `<div class="form-group"><label>${property}</label>
+                            <textarea class="form-control ${this.tempClass}" rows="3" data-binded="${property}"></textarea>
+                          </div>`
         break
       case 'slider':
+        this.fieldHTML = `<div class="form-group"><label>${property}</label>
+      <input type="range" data-binded="${property}" class="form-control ${this.tempClass}" min="${this.allowedValues[0]}" max="${this.allowedValues[1]}" step="${this.allowedValues[2]}" />
+      </div>`
+        break
+      case 'radio':
+        html = `<fieldset class="form-group"><label>${property}</label>`
+        for (const value of this.allowedValues) {
+          html += `<div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input ${this.tempClass}" name="${property}" value="${value}" data-binded="${property}" checked>
+              ${value}
+            </label>
+          </div> `
+        }
+
+        this.fieldHTML = `${html}</fieldset>`
         break
       default:
         throw new Error(
@@ -72,57 +95,75 @@ export default class BindedField extends BindedProperty {
       this.parent = parent
     }
 
+    // appends html to the parent
     $(this.parent).append(this.fieldHTML)
-    this.field = $(`.${this.tempClass}`)
-    this.field.removeClass(`.${this.tempClass}`)
 
-    if (this.allowedValues) {
-      if (this.allowedValues.constructor === Array) {
-        if (this.allowedValues.indexOf(this.value) !== -1) {
-          this.field.val(this.value)
+    // radio type has several fields
+    if (this.fieldType === 'radio') {
+      const fields = $(`.${this.tempClass}`)
+
+      for (const field of fields) {
+        $(field).removeClass(`.${this.tempClass}`)
+        if (field.value === this.value) { field.checked = true }
+        this.subfields.push($(field))
+        // add event listener on change
+        $(field).change(() => {
+          this.update('field')
+        })
+      }
+    } else {
+      this.field = $(`.${this.tempClass}`)
+      this.field.removeClass(`.${this.tempClass}`)
+
+      if (this.allowedValues) {
+        if (this.allowedValues.constructor === Array) {
+          if (this.allowedValues.indexOf(this.value) !== -1) {
+            this.field.val(this.value)
+          } else {
+            this.field.val(this.allowedValues[0])
+          }
         } else {
-          this.field.val(this.allowedValues[0])
+          this.field.val(this.value)
         }
       } else {
         this.field.val(this.value)
       }
-    } else {
-      this.field.val(this.value)
+
+      // add event listener on change
+      this.field.change(() => {
+        this.update('field')
+      })
+
+      this.field.keydown((e) => {
+        switch (e.keyCode) {
+          case 13:
+          /* Pressed enter */
+            this.update('field')
+            break
+          default:
+          /**/
+        }
+      })
     }
-
-    const thisObject = this
-
-    // add event listener on change
-    this.field.change(() => {
-      thisObject.update('field')
-    })
-    this.field.keydown((e) => {
-      switch (e.keyCode) {
-        case 13:
-        /* Pressed enter */
-          thisObject.update('field')
-          break
-        default:
-        /**/
-      }
-    })
   }
 
   delete() {
-    // delete the fieldset
+    // delete the div
     this.field.parent().remove()
     this.property = null
     this.object = null
   }
 
   update(origin = 'field') {
-    if (origin === 'field') {
-      this.value = $(this.field).val()
+    if (typeof this.field === 'undefined') {
+      debugError('BindedField.update: undefined field.')
+    } else if (origin === 'field') {
+      this.value = this.field.val()
       $(this.field).get(0).blur()
     } else if (
-        $(this.field).val().toUpperCase() !== String(this.value).toUpperCase()
+        this.field.val().toUpperCase() !== String(this.value).toUpperCase()
       ) {
-      $(this.field).val(this.value)
+      this.field.val(this.value)
     }
   }
 
@@ -142,5 +183,20 @@ export default class BindedField extends BindedProperty {
     } else {
       return this.object[this.property]
     }
+  }
+
+  get field() {
+    if (this.subfields.length) {
+      for (const field of this.subfields) {
+        if ($(field)[0].checked) {
+          return $(field)
+        }
+      }
+    }
+    return $(this._field)
+  }
+
+  set field(field) {
+    this._field = field
   }
 }

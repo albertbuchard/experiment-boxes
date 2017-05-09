@@ -70,8 +70,7 @@ export default class DragBox {
       // html for creation
       this.boxHTML = `<div id="${this.boxId}" class="dragbox ${this._boxClass}" style="display:none;" draggable="false">
           <div class="col-xs-12 dragbox-container">
-            <div class="col-xs-12 dragbox-title"><center><h3>Dragbox</h3></center>
-          </div>
+            <div class="col-xs-12 dragbox-title centered"><h3>Dragbox</h3></div>
           <div class="col-xs-12 dragbox-content"></div>
           <div class="col-xs-12 dragbox-footer"></div>
         </div>`

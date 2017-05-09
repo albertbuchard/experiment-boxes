@@ -1,5 +1,5 @@
 /**
- * ParamBox.JS
+ * ExperimentBoxes.JS
  * Created. 2016
  *
  * Plug and play tools for easy development in js. Part of the experiment.js toolbox.

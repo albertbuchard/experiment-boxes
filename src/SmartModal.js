@@ -99,7 +99,7 @@ export default class SmartModal extends DragBox {
 
     this.width = width
     this.height = height
- 
+
 
     $(this.boxElement).css({
       left: leftPos,

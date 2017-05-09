@@ -46,14 +46,30 @@
             };
 
             /* list of tweakable variables from the paramBox */
-            var parametersNames = ["selectedColor", "textForSelected", "selectedHeight"
-            , "nestedObject.usefullField", "nestedObject.anotherOne", "nestedObject.thisOneIsTheBoss"];
+            var parametersNames = ["selectedColor",
+                "textForSelected",
+                "selectedHeight",
+                "nestedObject.usefullField",
+                "nestedObject.anotherOne",
+                "nestedObject.thisOneIsTheBoss"];
 
-            var parametersConstraints = {
-              selectedColor: ["red",
-                "blue",
-                "yellow",
-                "green"]
+
+            /**
+             * Set the options for each field as necessary. Two parameters :
+             *  values constraint the values available and produce a SELECT by default
+             *          by specifying values and type: 'radio' you get RADIO instead of a SELECT
+             *  type
+             * @type {Object}
+             */
+            const options = {
+              selectedColor: {
+                values: ["red", "blue", "yellow", "green"],
+                type: 'radio'
+              },
+              selectedHeight: {
+                type: 'slider',
+                values: [0,400,10]
+              }
             };
 
             document.addEventListener("DOMContentLoaded", function(event) {
@@ -61,7 +77,7 @@
                 /* if ParamBox library is loaded - create one */
                 if (typeof ParamBox === "function") {
                   paramBox = new ParamBox();
-                  paramBox.bind(window.exampleObject, parametersNames, parametersConstraints);
+                  paramBox.bind(window.exampleObject, parametersNames, options);
                 }
 
                 window.setInterval(function(){

@@ -13,7 +13,7 @@ export default class BindedProperty {
 
     // export value as hierarchy if set, else set as property name
     this.hierarchy = hierarchy !== null ? hierarchy : property
-    this.exportName = this.hierarchy.replace(/\./g, '_')
+    this.exportName = this.hierarchy.replace(/\./g, '')
 
     if (!this.object) {
       // if parent object is not set consider that the binding is with a variable in the global scope
