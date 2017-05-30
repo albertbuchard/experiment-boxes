@@ -135,22 +135,30 @@ export default class DragBox {
   updateSize() {
     $(this.boxElement).width(this.width)
     if (!this.freeHeight) {
-      $(this.boxElement).height(this.height)
-      const contentHeight = this.height - this.TITLE_HEIGHT - this.FOOTER_HEIGHT - 7
-      $(this.boxElement).css({
-        height: this.height,
-        width: this.width,
-      })
-      $(this.boxElement)
-        .find('.dragbox-container')
-        .css({
-          height: this.height,
-        })
+      const currentHeight = this.boxElement.height()
+      const currentContentHeight = this.boxElement.find('.dragbox-content').height()
+      const difference = currentHeight - this.height
       $(this.boxElement)
         .find('.dragbox-content')
         .css({
-          height: contentHeight,
+          height: currentContentHeight - difference,
         })
+      // $(this.boxElement).height(this.height)
+      // const contentHeight = this.height - this.TITLE_HEIGHT - this.FOOTER_HEIGHT - 7
+      // $(this.boxElement).css({
+      //   height: this.height,
+      //   width: this.width,
+      // })
+      // $(this.boxElement)
+      //   .find('.dragbox-container')
+      //   .css({
+      //     height: this.height,
+      //   })
+      // $(this.boxElement)
+      //   .find('.dragbox-content')
+      //   .css({
+      //     height: contentHeight,
+      //   })
     } else {
       $(this.boxElement).css({
         width: this.width,
@@ -401,6 +409,14 @@ export default class DragBox {
   set overflow(overflow) {
     this._overflow = overflow
     $(this.boxElement).find('.dragbox-content').css('overflow-y', overflow)
+  }
+
+  get contentElement() {
+    return $(this.boxElement).find('.dragbox-content')
+  }
+
+  set contentElement(element) {
+    console.warn('DragBox.contentElement: read-only for now')
   }
 
   get overflow() {

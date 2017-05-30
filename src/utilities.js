@@ -1,7 +1,12 @@
-import _ from 'lodash'
 import math from 'experiment-mathjs'
 import { DEBUG_MODE_ON } from '../config'
 
+/*
+isNumeric function in Javascript
+*/
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n)
+}
 
 /**
  * noop - just your friendly empty function
@@ -86,7 +91,7 @@ function delay(ms) {
  */
 function jitter(min = mandatory(), max = mandatory()) {
   return new Promise((resolve) => {
-    const randomDuration = _.random(min, max)
+    const randomDuration = (Math.rand * (max - min)) + min
     setTimeout(resolve, randomDuration)
   })
 }
@@ -282,6 +287,41 @@ function findAllIndices(needle = mandatory(), haystack = mandatory()) {
   return -1
 }
 
+function extend(...args) {
+    // Variables
+  const extended = {}
+  let deep = false
+  let i = 0
+  const length = args.length
+
+    // Check if a deep merge
+  if (Object.prototype.toString.call(args[0]) === '[object Boolean]') {
+    deep = args[0]
+    i += 1
+  }
+
+    // Merge the object into the extended object
+  const merge = function (obj) {
+    for (const prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                // If deep merge and property is an object, merge properties
+        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+          extended[prop] = extend(true, extended[prop], obj[prop])
+        } else {
+          extended[prop] = obj[prop]
+        }
+      }
+    }
+  }
+
+    // Loop through each object and conduct a merge
+  for (; i < length; i++) {
+    const obj = args[i]
+    merge(obj)
+  }
+
+  return extended
+}
 
 export { diag,
   rowSum,
@@ -302,4 +342,6 @@ export { diag,
   debugError,
   noop,
   findAllIndices,
+  extend,
+  isNumeric,
 }

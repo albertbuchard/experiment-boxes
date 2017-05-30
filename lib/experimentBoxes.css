@@ -59,13 +59,37 @@
       color: #c1c1c1;
   }
 
-  .smartmodal-sendbutton, .smartmodal-closebutton, .smartmodal-nextbutton, .smartmodal-blankbutton, .parambox-savebutton, .parambox-reloadbutton, .parambox-importbutton {
-      background: #313D47;
-      color: #F3F3F3;
+  textarea {
+    resize: none;
+  }
+
+  .bindedfield-errordiv {
+    color: rgb(255, 0, 0) !important;
+    padding: 6px;
+    font-size: 8pt;
+  }
+  .bindedfield-errordiv span { 
+    padding: 6px;
+  }
+
+  .smartform-sendbutton, .smartmodal-sendbutton, .smartmodal-closebutton, .smartmodal-nextbutton, .smartmodal-blankbutton, .parambox-savebutton, .parambox-reloadbutton, .parambox-importbutton {
+      background: rgb(190, 190, 190);
+      color: rgba(35, 30, 32, 0.9);
+
+  }
+
+  .bindedfield-incorrect {
+    color: rgb(255, 0, 0);
+    background: rgb(255, 255, 255);
+    border: 1px solid red;
+  }
+
+  .bindedfield-label {
+    font-size: 12pt;
   }
 
   .dragbox-button:focus, .dragbox-button:hover {
-      color: rgba(35, 30, 32, 0.9);
+      color: #F3F3F3;
   }
 
   .dragbox-title {

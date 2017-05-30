@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            ParamBox.js: Example One
+        </title>
+        <!-- Load jquery -->
+        <script src="jquery.min.js">
+        </script>
+        <!-- Load Chart.js -->
+        <script src="Chart.bundle.js">
+        </script>
+        <!-- Load Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Load Parambox -->
+        <script src="../lib/experimentBoxes.max.js" type="text/javascript">
+        </script>
+
+
+        <script type="text/javascript">
+
+             var fields = {
+               firstname: {
+                 type: 'input', //field type: input, select, textaera, slider, radio
+                 constraints: 'alpha; length:2,20', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: null, // athorized values
+                 parent: null,
+               },
+               sex: {
+                 type: 'radio', //field type: input, select, textaera, slider, radio
+                 constraints: '', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: ['Male', 'Female'], // athorized values
+                 parent: null,
+               },
+               married: {
+                 type: 'select', //field type: input, select, textaera, slider, radio
+                 constraints: 'alpha; length:2,20', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: ['Single', 'Married', 'Divorced'], // athorized values
+                 parent: null,
+                 title: 'Marital Status'
+               },
+               pain: {
+                 type: 'slider', //field type: input, select, textaera, slider, radio
+                 constraints: '', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: [0, 10, 1], // athorized values
+                 parent: null,
+                 title: 'Pain from 0 to 10'
+               },
+               biography: {
+                 type: 'textaera', //field type: input, select, textaera, slider, radio
+                 constraints: 'mandatory', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: null, // athorized values
+                 parent: null,
+                 title: 'Your biography'
+               },
+
+             }
+
+             var options = {fields, title: 'Smart Form Example', format: 'topCentralSmall'}
+
+            var smartform = null;
+            document.addEventListener("DOMContentLoaded", function(event) {
+
+                /* if ParamBox library is loaded - create one */
+                if (typeof SmartForm === "function") {
+                  smartform = new SmartForm(options);
+                }
+
+            });
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

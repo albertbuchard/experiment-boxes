@@ -15,6 +15,7 @@ import DragBox from './src/DragBox'
 import ParamBox from './src/ParamBox'
 import SmartModal from './src/SmartModal'
 import SmartChart from './src/SmartChart'
+import SmartForm from './src/SmartForm'
 import BindedProperty from './src/BindedProperty'
 import BindedField from './src/BindedField'
 import { findAllIndices } from './src/utilities'
@@ -24,6 +25,7 @@ if (typeof window !== 'undefined') {
   window.ParamBox = ParamBox
   window.SmartModal = SmartModal
   window.SmartChart = SmartChart
+  window.SmartForm = SmartForm
   window.BindedProperty = BindedProperty
   window.BindedField = BindedField
 
@@ -51,6 +53,7 @@ export {
   DragBox,
   ParamBox,
   SmartModal,
+  SmartForm,
   SmartChart,
   BindedProperty,
   BindedField,
