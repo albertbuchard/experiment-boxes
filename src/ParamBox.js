@@ -77,6 +77,9 @@ export default class ParamBox extends DragBox {
     // set overflow
     this.overflow = 'scroll'
 
+    // Prevent freeHeight
+    this.freeHeight = false
+
     // set prefix for exports TODO: IMPLEMENT IT IN EXPORTS
     if (typeof window.paramPrefixIncrement === 'undefined') {
       window.paramPrefixIncrement = 0
