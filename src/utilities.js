@@ -164,6 +164,14 @@ function Deferred() {
   // }
 }
 
+function hasConstructor(constructorObject, testObject) {
+  if ((typeof testObject === 'undefined') || (testObject === null) || (testObject.constructor !== constructorObject)) {
+    return false
+  }
+  return true
+}
+
+
 /**
  * From http://stackoverflow.com/questions/3751520/how-to-generate-sequence-of-numbers-chars-in-javascript
  * TODO Pull request math js
@@ -344,4 +352,5 @@ export { diag,
   findAllIndices,
   extend,
   isNumeric,
+  hasConstructor,
 }

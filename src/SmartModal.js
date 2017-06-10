@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import DragBox from './DragBox'
+import { hasConstructor } from './utilities'
 
 
 /** Helper class creating modals */
@@ -67,6 +68,19 @@ export default class SmartModal extends DragBox {
     $(this.button).click(() => {
       smartModalObject.callThenDestroy()
     })
+  }
+
+  set buttonText(text = 'Close') {
+    if (hasConstructor($, this.button) && hasConstructor(String, text)) {
+      this.button.html(text)
+    }
+  }
+
+  get buttonText() {
+    if (hasConstructor($, this.button)) {
+      return this.button.html()
+    }
+    return undefined
   }
 
   // after setup life cycle function
