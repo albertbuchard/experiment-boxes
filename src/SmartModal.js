@@ -1,12 +1,15 @@
 import $ from 'jquery'
 import DragBox from './DragBox'
-import { hasConstructor } from './utilities'
+import { hasConstructor, delay } from './utilities'
 
 
 /** Helper class creating modals */
 export default class SmartModal extends DragBox {
 
-  constructor(formatType = 'across', callback = null, buttonType = 'closebutton', boxElement = null) {
+  constructor(formatType = 'across', callback = null, buttonType = 'closebutton', boxElement = null,
+    { stayInWindow = true,
+    paddingTopBottom = 100,
+    freeHeight = true } = { stayInWindow: true, paddingTopBottom: 100, freeHeight: true }) {
     // call super constructor
     super(boxElement)
 
@@ -33,6 +36,9 @@ export default class SmartModal extends DragBox {
     // ui
     this.draggable = false
     this.formatType = formatType
+    this.stayInWindow = stayInWindow
+    this.freeHeight = freeHeight
+    this.paddingTopBottom = paddingTopBottom
     this.buttonRowHtml = this.DEFAULT_BUTTON_ROW_HTML
 
     if (!(buttonType in this.DEFAULT_BUTTON_HTML)) {
@@ -70,19 +76,6 @@ export default class SmartModal extends DragBox {
     })
   }
 
-  set buttonText(text = 'Close') {
-    if (hasConstructor($, this.button) && hasConstructor(String, text)) {
-      this.button.html(text)
-    }
-  }
-
-  get buttonText() {
-    if (hasConstructor($, this.button)) {
-      return this.button.html()
-    }
-    return undefined
-  }
-
   // after setup life cycle function
   callAfterConstructor() {
     // update position to fit the screen adequatly and show
@@ -106,10 +99,18 @@ export default class SmartModal extends DragBox {
     const innerHeight = window.innerHeight
     const innerWidth = window.innerWidth
     const format = this.DEFAULT_FORMAT_TYPES[this.formatType]
-    const topPos = format[0] * innerHeight
+    let topPos = format[0] * innerHeight
     const leftPos = innerWidth * ((1 - format[1]) / 2)
     const width = innerWidth * format[1]
-    const height = innerHeight * format[2]
+    let height = innerHeight * format[2]
+
+    if ((this.stayInWindow) && (this.boxElement.height() + topPos > innerHeight)) {
+      this.freeHeight = false
+      const offset = innerHeight - this.boxElement.height()
+      topPos = offset > this.paddingTopBottom ? offset / 2 : this.paddingTopBottom / 2
+      height = offset > this.paddingTopBottom ? innerHeight - offset : innerHeight - this.paddingTopBottom
+      this.overflow = 'scroll'
+    }
 
     this.width = width
     this.height = height
@@ -124,5 +125,36 @@ export default class SmartModal extends DragBox {
     //   top: topPos,
     // }, 25, () => {})
     return false
+  }
+
+
+  set title(html) {
+    if (this.boxElement) {
+      $(this.boxElement).find('.dragbox-title').html(html)
+      this.updateSize()
+      delay(50).then(() => { this.updatePosition() })
+    }
+  }
+
+  set content(html) {
+    if (this.boxElement) {
+      this.contentDiv.html(html)
+      this.updateSize()
+      delay(50).then(() => { this.updatePosition() })
+    }
+  }
+
+
+  set buttonText(text = 'Close') {
+    if (hasConstructor($, this.button) && hasConstructor(String, text)) {
+      this.button.html(text)
+    }
+  }
+
+  get buttonText() {
+    if (hasConstructor($, this.button)) {
+      return this.button.html()
+    }
+    return undefined
   }
 }

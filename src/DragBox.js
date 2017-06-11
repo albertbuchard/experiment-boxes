@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { debuglog } from './utilities'
+import { debuglog, delay } from './utilities'
 
 /** Dragable div - Parent class suporting the toolbox  */
 export default class DragBox {
@@ -409,6 +409,11 @@ export default class DragBox {
   set overflow(overflow) {
     this._overflow = overflow
     $(this.boxElement).find('.dragbox-content').css('overflow-y', overflow)
+    if (overflow === 'scroll') {
+      // trigger the scroll to show it to the user
+      this.contentElement.scrollTop(1).scrollTop(0)
+      delay(3000).then(() => { this.contentElement.scrollTop(1).scrollTop(0) })
+    }
   }
 
   get contentElement() {
