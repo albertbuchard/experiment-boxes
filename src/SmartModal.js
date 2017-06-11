@@ -40,6 +40,7 @@ export default class SmartModal extends DragBox {
     this.freeHeight = freeHeight
     this.paddingTopBottom = paddingTopBottom
     this.buttonRowHtml = this.DEFAULT_BUTTON_ROW_HTML
+    this.scrollAppended = false
 
     if (!(buttonType in this.DEFAULT_BUTTON_HTML)) {
       throw new Error('buttonType invalid')
@@ -110,6 +111,19 @@ export default class SmartModal extends DragBox {
       topPos = offset > this.paddingTopBottom ? offset / 2 : this.paddingTopBottom / 2
       height = offset > this.paddingTopBottom ? innerHeight - offset : innerHeight - this.paddingTopBottom
       this.overflow = 'scroll'
+
+      if (!this.scrollAppended) {
+        this.prepend('<span class="smartmodal-scroll">↓ scroll down ↓</span>', '.smartmodal-buttonrow')
+        this.scrollAppended = true
+        const scrollElement = $(this.boxElement).find('.smartmodal-scroll')
+        this.contentElement.scroll(() => {
+          if (this.contentElement.scrollTop() !== 0) {
+            scrollElement.hide()
+          } else {
+            scrollElement.show()
+          }
+        })
+      }
     }
 
     this.width = width
@@ -132,7 +146,7 @@ export default class SmartModal extends DragBox {
     if (this.boxElement) {
       $(this.boxElement).find('.dragbox-title').html(html)
       this.updateSize()
-      delay(50).then(() => { this.updatePosition(); this.show() })
+      delay(10).then(() => { this.updatePosition(); this.show() })
     }
   }
 
@@ -140,7 +154,7 @@ export default class SmartModal extends DragBox {
     if (this.boxElement) {
       this.contentDiv.html(html)
       this.updateSize()
-      delay(50).then(() => { this.updatePosition(); this.show() })
+      delay(10).then(() => { this.updatePosition(); this.show() })
     }
   }
 

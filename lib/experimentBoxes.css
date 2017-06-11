@@ -75,8 +75,34 @@
   .smartform-sendbutton, .smartmodal-sendbutton, .smartmodal-closebutton, .smartmodal-nextbutton, .smartmodal-blankbutton, .parambox-savebutton, .parambox-reloadbutton, .parambox-importbutton {
       background: rgb(190, 190, 190);
       color: rgba(35, 30, 32, 0.9);
+      float: right;
 
   }
+
+.smartmodal-scroll {
+  -webkit-animation: pulsate 2s ease-in-out infinite;
+  -moz-animation: pulsate 2s ease-in-out infinite;
+  animation: pulsate 2s ease-in-out infinite;
+  font-size: smaller;
+}
+
+@-webkit-keyframes pulsate {
+  0% {opacity: 0}
+  20% {opacity: 0.5}
+  100% {opacity: 0}
+}
+
+@-moz-keyframes pulsate {
+  0% {opacity: 0}
+  20% {opacity: 0.5}
+  100% {opacity: 0}
+}
+
+@keyframes pulsate {
+  0% {opacity: 0}
+  20% {opacity: 0.5}
+  100% {opacity: 0}
+}
 
   .bindedfield-incorrect {
     color: rgb(255, 0, 0);
@@ -99,7 +125,7 @@
     border-radius: 3px 3px 3px 3px;
     */
       background: rgba(55, 55, 50, 1);
-      padding: 12px; 
+      padding: 12px;
       font-size: 18pt !important;
   }
 
@@ -122,7 +148,7 @@
   }
 
   .dragbox-footer {
-      text-align: right;
+      text-align: center;
       padding: 6px;
   }
 

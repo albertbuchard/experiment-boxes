@@ -298,7 +298,7 @@ export default class DragBox {
    * @param  {String} to             target identifier eg .target-class or #targetID
    * @param  {String} wrapInDivClass Null by default. If set, creates a div with specified class wrapping the html code.
    */
-  append(html, to = '.dragbox-content', wrapInDivClass = null) {
+  append(html, to = '.dragbox-content', wrapInDivClass = null, type = 'append') {
     // TODO Convert all element creation to pure javascript -- make a react version
     // append html to the selected child element of the dragbox
     if (this.boxElement) {
@@ -306,12 +306,20 @@ export default class DragBox {
         html = `<div class="${wrapInDivClass}" >${html}</div>`
       }
 
+      if (type !== 'prepend') {
+        type = 'append'
+      }
+
       if (to !== 'container') {
-        this.boxElement.find(to).append(html)
+        (this.boxElement.find(to))[type](html)
       } else {
-        this.boxElement.append(html)
+        this.boxElement[type](html)
       }
     }
+  }
+
+  prepend(html, to = '.dragbox-content', wrapInDivClass = null) {
+    this.append(html, to, wrapInDivClass, 'prepend')
   }
 
   /**
