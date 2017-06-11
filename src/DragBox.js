@@ -409,11 +409,6 @@ export default class DragBox {
   set overflow(overflow) {
     this._overflow = overflow
     $(this.boxElement).find('.dragbox-content').css('overflow-y', overflow)
-    if (overflow === 'scroll') {
-      // trigger the scroll to show it to the user
-      this.contentElement.scrollTop(1).scrollTop(0)
-      delay(3000).then(() => { this.contentElement.scrollTop(1).scrollTop(0) })
-    }
   }
 
   get contentElement() {

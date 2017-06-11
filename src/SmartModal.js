@@ -79,9 +79,9 @@ export default class SmartModal extends DragBox {
   // after setup life cycle function
   callAfterConstructor() {
     // update position to fit the screen adequatly and show
-    this.updatePosition()
     this.updateSize()
-    this.show()
+    this.updatePosition()
+    // this.show()
   }
 
   // look for a callback then destroy
@@ -132,7 +132,7 @@ export default class SmartModal extends DragBox {
     if (this.boxElement) {
       $(this.boxElement).find('.dragbox-title').html(html)
       this.updateSize()
-      delay(50).then(() => { this.updatePosition() })
+      delay(50).then(() => { this.updatePosition(); this.show() })
     }
   }
 
@@ -140,7 +140,7 @@ export default class SmartModal extends DragBox {
     if (this.boxElement) {
       this.contentDiv.html(html)
       this.updateSize()
-      delay(50).then(() => { this.updatePosition() })
+      delay(50).then(() => { this.updatePosition(); this.show() })
     }
   }
 
