@@ -52,16 +52,7 @@ export default class SmartForm extends DragBox {
     this.DEFAULT_BUTTON_HTML = {
       sendbutton: '<button type="button" class="btn btn-secondary dragbox-button smartform-sendbutton">Send</button>',
     }
-    this.DEFAULT_FORMAT_TYPES = {
-      // format type desribe the topOffset, width, and height of the modal in proportion
-      // updatePosition is called when the window is resized
-      centralSmall: [0.2, 0.4, 0.3],
-      centralLarge: [0.2, 0.7, 0.6],
-      across: [0.3, 1, 0.4],
-      overlay: [0.1, 0.8, 0.8],
-      topCentralSmall: [0.1, 0.4, 0.3],
-      topCentralLarge: [0.1, 0.7, 0.6],
-    }
+
 
     // ui
     this.rowHtml = this.DEFAULT_ROW_HTML
@@ -94,7 +85,7 @@ export default class SmartForm extends DragBox {
       const baseField = {
         type: null,
         constraints: null, // list of constraints that will be automatically verified: mandatory; alpha; numeric; lenght:XX; contains:a,b,@,.;
-        authorizedValues: '', // athorized values
+        authorizedValues: null, // athorized values
         bindedField: null,
         parent: null,
         value: '',
@@ -123,13 +114,15 @@ export default class SmartForm extends DragBox {
     this.freeHeight = freeHeight
     this.initialFreeHeigth = freeHeight
     this.noPageScroll = noPageScroll
+    this.scrollAppended = false
+    this.maxHeight = null
     this.formatType = format // TODO add height/width custom definition
     this.buttonRowHtml = this.DEFAULT_BUTTON_ROW_HTML
 
     this.buttonType = 'sendbutton'
 
     // set dragbox title
-    this.title = `<center><h5>${title}</h5></center>`
+    this.title = `<center>${title}</center>`
 
     // setup the button
     this.append(this.buttonRowHtml, '.dragbox-footer')
@@ -181,9 +174,11 @@ export default class SmartForm extends DragBox {
   // after setup life cycle function
   callAfterConstructor() {
     // update position to fit the screen adequatly and show
-    this.updatePosition()
-    this.updateSize()
-    this.show()
+    delay(10).then(() => {
+      this.updatePosition()
+      this.updateSize()
+      this.show()
+    })
   }
 
   // look for a callback then destroy
@@ -237,17 +232,64 @@ export default class SmartForm extends DragBox {
       left: leftPos,
       top: topPos,
     })
-    delay(10).then(() => {
-      const width = innerWidth * format[1]
-      if (!this.initialFreeHeigth) {
-        this.height = innerHeight * format[2]
-      } else if ((this.initialFreeHeigth) && (this.noPageScroll) && (this.boxElement.height() + topPos > innerHeight - 20)) {
-        this.freeHeight = false
-        this.height = innerHeight - 20 - topPos
+
+    const width = innerWidth * format[1]
+    if (width !== this.width) {
+      this.width = width
+    }
+
+    this.freeHeight = this.initialFreeHeigth
+    if (this.initialFreeHeigth) {
+      this.contentElement.height('auto')
+    } else {
+      this.height = innerHeight * format[2]
+    }
+    this.maxHeight = null
+    if (this.scrollAppended) { $(this.boxElement).find('.smartmodal-scroll').hide() }
+
+    // delay(10).then(function update() { //eslint-disable-line
+    if (!this.initialFreeHeigth) {
+      this.height = innerHeight * format[2]
+    } else if (((this.initialFreeHeigth) && (!this.freeHeight)) || ((this.initialFreeHeigth) && (this.noPageScroll) && (this.boxElement.height() + topPos > innerHeight - 20))) {
+      if (this.maxHeight === null) { this.maxHeight = this.boxElement.height() }
+      this.freeHeight = false
+      const fullHeight = innerHeight - 20 - topPos
+
+      if (fullHeight > this.maxHeight) {
+        this.height = this.maxHeight
+        if (this.scrollAppended) { $(this.boxElement).find('.smartmodal-scroll').hide() }
+      } else {
+        this.height = fullHeight
+        if ((this.scrollAppended) && (this.contentElement.get(0).scrollHeight > this.contentElement.innerHeight())) {
+          $(this.boxElement).find('.smartmodal-scroll').show()
+        }
+      }
+    }
+
+    delay(1).then(() => {
+      if ((!this.scrollAppended) && (this.contentElement.get(0).scrollHeight > this.contentElement.innerHeight())) {
+        this.prepend('<span class="smartmodal-scroll">&darr; scroll down &darr;</span>', '.smartform-buttonrow')
+        this.scrollAppended = true
+        const scrollElement = $(this.boxElement).find('.smartmodal-scroll')
+        this.contentElement.scroll(() => {
+          if (this.contentElement.scrollTop() !== 0) {
+            scrollElement.hide()
+          } else {
+            scrollElement.show()
+          }
+        })
       }
 
-      this.width = width
+      if ((this.scrollAppended) && (this.contentElement.get(0).scrollHeight > this.contentElement.innerHeight())) {
+        $(this.boxElement).find('.smartmodal-scroll').show()
+      } else if (this.scrollAppended) {
+        $(this.boxElement).find('.smartmodal-scroll').hide()
+      }
     })
+
+
+    // this.width = width
+    // }.bind(this))
     // $(this.boxElement).animate({
     //   left: leftPos,
     //   top: topPos,

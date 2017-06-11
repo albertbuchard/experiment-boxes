@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import BindedProperty from './BindedProperty'
-import { debugError, mandatory, isNumeric } from './utilities'
+import { debugError, mandatory, isNumeric, parseDate } from './utilities'
 
 export default class BindedField extends BindedProperty {
   // this class holds an active input field (select, text input, slider component)
@@ -48,7 +48,8 @@ export default class BindedField extends BindedProperty {
         break
       case 'select':
         if (!allowedValues) {
-          throw new Error('fieldType selector needs at least one allowedValues')
+          debugError('fieldType selector needs at least one allowedValues')
+          return
         }
 
         html += `<div class="form-group">
@@ -87,6 +88,10 @@ export default class BindedField extends BindedProperty {
       </div>`
         break
       case 'radio':
+        if (!allowedValues) {
+          debugError('fieldType selector needs at least one allowedValues')
+          return
+        }
         html = `<fieldset class="form-group"><label class="bindedfield-label">${this.title}</label>`
         for (const value of this.allowedValues) {
           html += `<div class="form-check">
@@ -104,9 +109,8 @@ export default class BindedField extends BindedProperty {
         </fieldset>`
         break
       default:
-        throw new Error(
-        'fieldType is invalid : input, selector and slider are the only valid type for now',
-      )
+        debugError('fieldType is invalid : input, selector and slider are the only valid type for now')
+        return
     }
 
     if (parent) {
@@ -266,6 +270,17 @@ export default class BindedField extends BindedProperty {
                 }
               }
               break
+            case 'contains':
+              for (const char of val) {
+                if (!char) {
+                  debugError(`BindedField.parsedConstraints: Invalid values for the contains rule - ${constraint}`)
+                  continue
+                }
+                if (this.value.indexOf(char) === -1) {
+                  return [false, `Character ${char} must be present - all necessary characters : ${keyVal[1].toString()}`]
+                }
+              }
+              break
             default:
               debugError(`BindedField.parsedConstraints: Invalid constraint - ${constraint}`)
           }
@@ -281,6 +296,9 @@ export default class BindedField extends BindedProperty {
               break
             case 'numeric':
               if (!isNumeric(this.value)) { return [false, 'Value must contain only numeric characters'] }
+              break
+            case 'date':
+              if (parseDate(this.value) === null) { return [false, 'Invalid date format. Use mm/dd/yyyy.'] }
               break
             default:
               debugError(`BindedField.parsedConstraints: Invalid constraint - ${constraint}`)

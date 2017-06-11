@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            ParamBox.js: Example One
+            ExperimentBoxes: Modal example
         </title>
         <!-- Load jquery -->
         <script src="jquery.min.js">
@@ -25,7 +25,7 @@
 
         <script type="text/javascript">
 
-             var title = 'Example Modal 🌻'
+             var title = '🌻 Example Modal 🌻'
              var content = `This is a long content<br><br><br><ul>
                              <li>Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu. Cras consequat.</li>
                              <li>Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.</li>
@@ -51,7 +51,7 @@
 
                 /* if ParamBox library is loaded - create one */
                 if (typeof SmartModal === "function") {
-                  modal = new SmartModal('centralLarge', function dismissed() {
+                  modal = new SmartModal('topCentralLarge', function dismissed() {
                     console.log('Modal dismissed')
                   });
 

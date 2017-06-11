@@ -28,9 +28,27 @@
              var fields = {
                firstname: {
                  type: 'input', //field type: input, select, textaera, slider, radio
-                 constraints: 'alpha; length:2,20', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 constraints: 'alpha; length:1,30', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
                  authorizedValues: null, // athorized values
                  parent: null,
+               },
+               lastname: {
+                 type: 'input', //field type: input, select, textaera, slider, radio
+                 constraints: 'alpha; length:1,30', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: null, // athorized values
+                 parent: null,
+               },
+               email: {
+                 type: 'input', //field type: input, select, textaera, slider, radio
+                 constraints: 'alpha; length:1,30; contains:@', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: null, // athorized values
+                 parent: null,
+               },
+               birthdate: {
+                 type: 'input', //field type: input, select, textaera, slider, radio
+                 constraints: 'date', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 parent: null,
+                 title: 'Date of birth (mm/dd/yyyy)'
                },
                sex: {
                  type: 'radio', //field type: input, select, textaera, slider, radio
@@ -44,6 +62,12 @@
                  authorizedValues: ['Single', 'Married', 'Divorced'], // athorized values
                  parent: null,
                  title: 'Marital Status'
+               },
+               education: {
+                 type: 'select', //field type: input, select, textaera, slider, radio
+                 authorizedValues: ['Did not finish highschool', 'Technical College ', 'Bachelor', 'Master/Engineer', 'PhD/MD'], // athorized values
+                 parent: null,
+                 title: 'Education level'
                },
                pain: {
                  type: 'slider', //field type: input, select, textaera, slider, radio

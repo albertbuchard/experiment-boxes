@@ -6,7 +6,7 @@ import { hasConstructor, delay } from './utilities'
 /** Helper class creating modals */
 export default class SmartModal extends DragBox {
 
-  constructor(formatType = 'across', callback = null, buttonType = 'closebutton', boxElement = null,
+  constructor(formatType = 'topCentralLarge', callback = null, buttonType = 'closebutton', boxElement = null,
     { stayInWindow = true,
     paddingTopBottom = 100,
     freeHeight = true } = { stayInWindow: true, paddingTopBottom: 100, freeHeight: true }) {
@@ -21,23 +21,18 @@ export default class SmartModal extends DragBox {
       blankbutton: '<button type="button" class="btn btn-secondary dragbox-button smartmodal-blankbutton"></button>',
       sendbutton: '<button type="button" class="btn btn-secondary dragbox-button smartmodal-sendbutton">Send</button>',
     }
-    this.DEFAULT_FORMAT_TYPES = {
-      // format type desribe the topOffset, width, and height of the modal in proportion
-      // updatePosition is called when the window is resized
-      centralSmall: [0.2, 0.4, 0.3],
-      centralLarge: [0.2, 0.7, 0.6],
-      across: [0.3, 1, 0.4],
-      overlay: [0.1, 0.8, 0.8],
-    }
 
     // callback
     this.callback = callback
 
     // ui
     this.draggable = false
-    this.formatType = formatType
+    this.formatType = this.DEFAULT_FORMAT_TYPES.hasOwnProperty(formatType) ? formatType : 'topCentralLarge'
     this.stayInWindow = stayInWindow
     this.freeHeight = freeHeight
+    this.initialFreeHeigth = freeHeight
+    this.maxHeight = null
+    this.lastUpdate = 0
     this.paddingTopBottom = paddingTopBottom
     this.buttonRowHtml = this.DEFAULT_BUTTON_ROW_HTML
     this.scrollAppended = false
@@ -105,15 +100,51 @@ export default class SmartModal extends DragBox {
     const width = innerWidth * format[1]
     let height = innerHeight * format[2]
 
-    if ((this.stayInWindow) && (this.boxElement.height() + topPos > innerHeight)) {
+    if (width !== this.width) {
+      this.width = width
+    }
+
+    this.freeHeight = this.initialFreeHeigth
+    if (this.initialFreeHeigth) {
+      this.contentElement.height('auto')
+    } else {
+      this.height = innerHeight * format[2]
+    }
+    this.maxHeight = null
+    if (this.scrollAppended) { $(this.boxElement).find('.smartmodal-scroll').hide() }
+
+    if (((this.initialFreeHeigth) && (!this.freeHeight)) || ((this.stayInWindow) && (this.boxElement.height() + topPos > (innerHeight - this.paddingTopBottom)))) {
+      if (this.maxHeight === null) {
+        this.maxHeight = this.initialFreeHeigth ? this.boxElement.height() : innerHeight * format[2]
+      }
+
       this.freeHeight = false
-      const offset = innerHeight - this.boxElement.height()
-      topPos = offset > this.paddingTopBottom ? offset / 2 : this.paddingTopBottom / 2
+      const offset = innerHeight - this.maxHeight
+      topPos = offset > this.paddingTopBottom ? offset - (this.paddingTopBottom / 2) : this.paddingTopBottom / 2
       height = offset > this.paddingTopBottom ? innerHeight - offset : innerHeight - this.paddingTopBottom
       this.overflow = 'scroll'
 
+      if ((innerHeight - this.paddingTopBottom) > height + (format[0] * innerHeight)) {
+        if (this.initialFreeHeigth) {
+          this.contentElement.height('auto')
+        } else {
+          height = innerHeight * format[2]
+        }
+
+        topPos = format[0] * innerHeight
+        if (this.scrollAppended) { $(this.boxElement).find('.smartmodal-scroll').hide() }
+      }
+    }
+
+
+    this.height = height
+    $(this.boxElement).css({
+      left: leftPos,
+      top: topPos,
+    })
+    delay(1).then(() => {
       if (!this.scrollAppended) {
-        this.prepend('<span class="smartmodal-scroll">↓ scroll down ↓</span>', '.smartmodal-buttonrow')
+        this.prepend('<span class="smartmodal-scroll">&darr; scroll down &darr;</span>', '.smartmodal-buttonrow')
         this.scrollAppended = true
         const scrollElement = $(this.boxElement).find('.smartmodal-scroll')
         this.contentElement.scroll(() => {
@@ -124,20 +155,14 @@ export default class SmartModal extends DragBox {
           }
         })
       }
-    }
 
-    this.width = width
-    this.height = height
-
-
-    $(this.boxElement).css({
-      left: leftPos,
-      top: topPos,
+      if ((this.scrollAppended) && (this.contentElement.get(0).scrollHeight > this.contentElement.innerHeight())) {
+        $(this.boxElement).find('.smartmodal-scroll').show()
+      } else if (this.scrollAppended) {
+        $(this.boxElement).find('.smartmodal-scroll').hide()
+      }
     })
-    // $(this.boxElement).animate({
-    //   left: leftPos,
-    //   top: topPos,
-    // }, 25, () => {})
+
     return false
   }
 

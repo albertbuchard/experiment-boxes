@@ -23,6 +23,17 @@ export default class DragBox {
     this.DEFAULT_DRAGGABLE = true
     this.DEFAULT_STICKINESS_TYPE = 'magnetized'
 
+    this.DEFAULT_FORMAT_TYPES = {
+      // format type desribe the topOffset, width, and height of the modal in proportion
+      // updatePosition is called when the window is resized
+      centralSmall: [0.2, 0.4, 0.3],
+      centralLarge: [0.2, 0.7, 0.6],
+      across: [0.3, 1, 0.4],
+      overlay: [0.1, 0.8, 0.8],
+      topCentralSmall: [0.1, 0.4, 0.3],
+      topCentralLarge: [0.1, 0.7, 0.6],
+    }
+
     // ui variables
     this.boxId = null
     this.boxElement = boxElement
@@ -360,6 +371,17 @@ export default class DragBox {
 
   get height() {
     return this._height
+  }
+
+  set scrollHeigth(val) {
+    // read-only
+  }
+
+  get scrollHeight() {
+    if (this.boxElement) {
+      return this.boxElement.height() - this.contentElement.height() + this.contentElement.get(0).scrollHeight
+    }
+    return undefined
   }
 
   set beingDragged(dragged) {

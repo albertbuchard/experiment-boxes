@@ -85,6 +85,27 @@ function delay(ms) {
 }
 
 /**
+ * ©Adam Jurczyk ; https://stackoverflow.com/questions/7582828/how-to-check-if-a-string-is-a-legal-dd-mm-yyyy-date
+ * @method parseDate
+ * @param  {[type]}  str [description]
+ * @return {[type]}      [description]
+ */
+function parseDate(str) {
+  const t = str.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (t !== null) {
+    const d = +t[1]
+    const m = +t[2]
+    const y = +t[3]
+    const date = new Date(y, m - 1, d)
+    if (date.getFullYear() === y && date.getMonth() === m - 1) {
+      return date
+    }
+  }
+
+  return null
+}
+
+/**
  * @param  {int} min min delay in ms
  * @param  {int} max max delay in ms
  * @return {promise} promise which will resolve in delay ms
@@ -353,4 +374,5 @@ export { diag,
   extend,
   isNumeric,
   hasConstructor,
+  parseDate,
 }
