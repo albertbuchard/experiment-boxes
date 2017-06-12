@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            ParamBox.js: Example One
+            Experiment-boxes: SmartForm
         </title>
         <!-- Load jquery -->
         <script src="jquery.min.js">
@@ -38,9 +38,15 @@
                  authorizedValues: null, // athorized values
                  parent: null,
                },
+               password: {
+                 type: 'password', //field type: input, select, textaera, slider, radio
+                 constraints: 'length:5,300; score: 50', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: null, // athorized values
+                 parent: null,
+               },
                email: {
                  type: 'input', //field type: input, select, textaera, slider, radio
-                 constraints: 'alpha; length:1,30; contains:@', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 constraints: 'length:1,30; contains:@', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
                  authorizedValues: null, // athorized values
                  parent: null,
                },
@@ -48,7 +54,7 @@
                  type: 'input', //field type: input, select, textaera, slider, radio
                  constraints: 'date', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
                  parent: null,
-                 title: 'Date of birth (mm/dd/yyyy)'
+                 title: 'Date of birth (dd/mm/yyyy)'
                },
                sex: {
                  type: 'radio', //field type: input, select, textaera, slider, radio
@@ -86,7 +92,7 @@
 
              }
 
-             var options = {fields, title: 'Smart Form Example', format: 'topCentralSmall'}
+             var options = {fields, title: 'Smart Form Example', format: 'topCentralSmall', callback: function(fields) { console.log('From callback', fields);}}
 
             var smartform = null;
             document.addEventListener("DOMContentLoaded", function(event) {
@@ -94,6 +100,7 @@
                 /* if ParamBox library is loaded - create one */
                 if (typeof SmartForm === "function") {
                   smartform = new SmartForm(options);
+                  smartform.promise.then(function (fields) { console.log('From promise', fields); })
                 }
 
             });

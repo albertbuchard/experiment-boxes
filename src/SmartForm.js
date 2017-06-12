@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import DragBox from './DragBox'
 import BindedField from './BindedField'
-import { mandatory, debuglog, extend, delay } from './utilities'
+import { mandatory, Deferred, debuglog, extend, delay, debugError, hasConstructor } from './utilities'
 
 // TODO: Class generating a form based on preset fields and managing */
 export default class SmartForm extends DragBox {
@@ -30,6 +30,7 @@ export default class SmartForm extends DragBox {
     height = null,
     width = null,
     callback = null,
+    deferred = new Deferred(),
     url = null,
     target = '_blank',
     verificationFunction = () => true,
@@ -107,6 +108,12 @@ export default class SmartForm extends DragBox {
     // callback
     this.callback = typeof callback === 'function' ? callback : (fields) => { debuglog(fields) }
     this.verificationFunction = verificationFunction
+    if (hasConstructor(Deferred, deferred)) {
+      this._deferred = deferred
+    } else {
+      this._deferred = new Deferred()
+      debugError('SmartForm: deferred is not a valid Deferred class. Creating a new one.')
+    }
 
     // ui
     this.draggable = false
@@ -164,7 +171,7 @@ export default class SmartForm extends DragBox {
           this.fields[field].bindedField.incorrect(msg)
           returnValue = false
         } else {
-          this.fields[field].bindedField.correct()
+          this.fields[field].bindedField.correct(msg)
         }
       }
     }
@@ -183,8 +190,12 @@ export default class SmartForm extends DragBox {
 
   // look for a callback then destroy
   callThenDestroy() {
-    if (this.callback) {
+    if (hasConstructor(Function, this.callback)) {
       this.callback(this.fields)
+    }
+
+    if (hasConstructor(Deferred, this.deferred)) {
+      this.deferred.resolve(this.fields)
     }
 
     if (this.formElement !== null) {
@@ -295,5 +306,28 @@ export default class SmartForm extends DragBox {
     //   top: topPos,
     // }, 25, () => {})
     return false
+  }
+
+  set promise(val) {
+    debugError('SmartForm: promise is a readonly property, set the deferred property')
+  }
+
+  get promise() {
+    if (hasConstructor(Deferred, this.deferred)) {
+      return this.deferred.promise
+    }
+    return null
+  }
+
+  set deferred(val) {
+    if (hasConstructor(Deferred, val)) {
+      this._deferred = val
+    } else {
+      debugError('SmartForm: value needs to be of class Deferred')
+    }
+  }
+
+  get deferred() {
+    return this._deferred
   }
 }

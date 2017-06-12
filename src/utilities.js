@@ -106,6 +106,42 @@ function parseDate(str) {
 }
 
 /**
+ * From https://stackoverflow.com/questions/948172/password-strength-meter
+ * @method scorePassword
+ * @param  {string}      pass password to scorePassword
+ * @return {Number}           Score (>80 is strong)
+ */
+function scorePassword(pass) {
+  let score = 0
+  if (!pass) { return score }
+
+    // award every unique letter until 5 repetitions
+  const letters = {}
+  for (let i = 0; i < pass.length; i++) {
+    letters[pass[i]] = (letters[pass[i]] || 0) + 1
+    score += 5.0 / letters[pass[i]]
+  }
+
+    // bonus points for mixing it up
+  const variations = {
+    digits: /\d/.test(pass),
+    lower: /[a-z]/.test(pass),
+    upper: /[A-Z]/.test(pass),
+    nonWords: /\W/.test(pass),
+  }
+
+  let variationCount = 0
+  for (const check in variations) {
+    if (variations.hasOwnProperty(check)) {
+      variationCount += (variations[check] === true) ? 1 : 0
+    }
+  }
+  score += (variationCount - 1) * 10
+
+  return parseInt(score, 10)
+}
+
+/**
  * @param  {int} min min delay in ms
  * @param  {int} max max delay in ms
  * @return {promise} promise which will resolve in delay ms
@@ -115,6 +151,21 @@ function jitter(min = mandatory(), max = mandatory()) {
     const randomDuration = (Math.rand * (max - min)) + min
     setTimeout(resolve, randomDuration)
   })
+}
+
+/**
+ * From https://stackoverflow.com/questions/948172/password-strength-meter
+ * @method checkPassStrength
+ * @param  {String}          pass  password
+ * @return {String}                Either weak, good, or strong
+ */
+function passwordStrength(pass) {
+  const score = scorePassword(pass)
+  if (score > 80) { return 'strong' }
+  if (score > 60) { return 'good' }
+  if (score >= 30) { return 'weak' }
+
+  return ''
 }
 
 /**
@@ -375,4 +426,6 @@ export { diag,
   isNumeric,
   hasConstructor,
   parseDate,
+  passwordStrength,
+  scorePassword,
 }

@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import BindedProperty from './BindedProperty'
-import { debugError, mandatory, isNumeric, parseDate } from './utilities'
+import { debugError, mandatory, isNumeric, parseDate, passwordStrength, scorePassword } from './utilities'
 
 export default class BindedField extends BindedProperty {
   // this class holds an active input field (select, text input, slider component)
@@ -12,7 +12,7 @@ export default class BindedField extends BindedProperty {
     fieldType = 'input',
     allowedValues = null,
     hierarchy = null,
-    { constraints = '', title = null } = {},
+    { constraints = '', title = null, baseMessage = '' } = {},
   ) {
     super(object, property, hierarchy)
 
@@ -28,7 +28,9 @@ export default class BindedField extends BindedProperty {
     this.tempClass = `binded-${typeof object}${property}`
     this.subfields = []
     this.errorDiv = null
+    this.messageDiv = null
     this.title = (title || property).replace(/(^|\s)[a-z]/g, f => f.toUpperCase())
+    this.baseMessage = baseMessage
 
 
     // parent
@@ -41,10 +43,23 @@ export default class BindedField extends BindedProperty {
         this.fieldHTML = `<div class="form-group"><label class="bindedfield-label">${this.title}</label>
         <input type="text" class="form-control ${this.tempClass}" data-binded="${property}">
           <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error" >
-
             <i class="glyphicon glyphicon-remove"></i><span class="bindedfield-error"></span>
           </div>
+          <div class="col-sm-10 bindedfield-messagediv ${this.tempClass}-message" >
+            <i class="glyphicon glyphicon-info"></i><span class="bindedfield-message"></span>
+          </div>
         </div>`
+        break
+      case 'password':
+        this.fieldHTML = `<div class="form-group"><label class="bindedfield-label">${this.title}</label>
+          <input type="password" class="form-control ${this.tempClass}" data-binded="${property}">
+            <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error" >
+              <i class="glyphicon glyphicon-remove"></i><span class="bindedfield-error"></span>
+            </div>
+            <div class="col-sm-10 bindedfield-messagediv ${this.tempClass}-message" >
+            <i class="glyphicon glyphicon-info"></i><span class="bindedfield-message"></span>
+            </div>
+          </div>`
         break
       case 'select':
         if (!allowedValues) {
@@ -64,9 +79,11 @@ export default class BindedField extends BindedProperty {
           }</option>`
         }
         this.fieldHTML = `${html}</select>
-        <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error" >
-
+        <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error"
           <i class="glyphicon glyphicon-remove"></i><span class="bindedfield-error"></span>
+          </div>
+          <div class="col-sm-10 bindedfield-messagediv ${this.tempClass}-message" >
+          <i class="glyphicon glyphicon-info"></i><span class="bindedfield-message"></span>
         </div>
       </div>`
         break
@@ -74,8 +91,10 @@ export default class BindedField extends BindedProperty {
         this.fieldHTML = `<div class="form-group"><label class="bindedfield-label">${this.title}</label>
                             <textarea class="form-control ${this.tempClass}" rows="3" data-binded="${property}"></textarea>
                             <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error" >
-
                               <i class="glyphicon glyphicon-remove"></i><span class="bindedfield-error"></span>
+                            </div>
+                            <div class="col-sm-10 bindedfield-messagediv ${this.tempClass}-message" >
+                              <i class="glyphicon glyphicon-info"></i><span class="bindedfield-message"></span>
                             </div>
                           </div>`
         break
@@ -84,6 +103,9 @@ export default class BindedField extends BindedProperty {
       <input type="range" data-binded="${property}" class="form-control ${this.tempClass}" min="${this.allowedValues[0]}" max="${this.allowedValues[1]}" step="${this.allowedValues[2]}" />
       <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error" >
         <i class="glyphicon glyphicon-remove"></i><span class="bindedfield-error"></span>
+      </div>
+      <div class="col-sm-10 bindedfield-messagediv ${this.tempClass}-message" >
+        <i class="glyphicon glyphicon-info"></i><span class="bindedfield-message"></span>
       </div>
       </div>`
         break
@@ -105,6 +127,9 @@ export default class BindedField extends BindedProperty {
         this.fieldHTML = `${html}
           <div class="col-sm-10 bindedfield-errordiv ${this.tempClass}-error" >
             <i class="glyphicon glyphicon-remove"></i><span class="bindedfield-error"></span>
+          </div>
+          <div class="col-sm-10 bindedfield-messagediv ${this.tempClass}-message" >
+            <i class="glyphicon glyphicon-info"></i><span class="bindedfield-message"></span>
           </div>
         </fieldset>`
         break
@@ -181,6 +206,16 @@ export default class BindedField extends BindedProperty {
         this.errorDiv = null
       }
 
+      this.messageDiv = $(`.${this.tempClass}-message`)
+      if (this.messageDiv.length) {
+        this.messageDiv.removeClass(`${this.tempClass}-message`)
+        this.messageDiv.hide()
+      } else {
+        this.messageDiv = null
+      }
+
+      this.message = this.baseMessage
+
       // add event listener on change
       this.field.change(() => {
         this.update('field')
@@ -213,26 +248,28 @@ export default class BindedField extends BindedProperty {
       if (this.value !== this.field.val()) {
         this.value = this.field.val()
         const [valid, msg] = this.verify()
-        if (valid) { this.correct() } else { this.incorrect(msg) }
+        if (valid) { this.correct(msg) } else { this.incorrect(msg) }
       }
       $(this.field).get(0).blur()
     } else if (this.field.val() !== String(this.value)) {
       this.field.val(this.value)
       const [valid, msg] = this.verify()
-      if (valid) { this.correct() } else { this.incorrect(msg) }
+      if (valid) { this.correct(msg) } else { this.incorrect(msg) }
     }
   }
 
-  correct() {
+  correct(msg) {
     // remove incorrect class
     this.field.removeClass('bindedfield-incorrect')
     this.error = ''
+    this.message = msg
   }
 
   incorrect(msg = 'Field does not match constraints') {
     // add incorrect class
     this.field.addClass('bindedfield-incorrect')
     this.error = msg
+    this.message = ''
   }
 
 
@@ -244,6 +281,7 @@ export default class BindedField extends BindedProperty {
   verify() {
     // TODO Finish implementation of constraints
     // TODO think of creating a parser for the constraints when all is gut --- if necessary... or not
+    let okMessage = ''
     if ((typeof this.constraints === 'string') && (this.constraints !== '')) {
       const constraintsArray = this.constraints.split(';')
       for (let constraint of constraintsArray) {
@@ -277,8 +315,20 @@ export default class BindedField extends BindedProperty {
                   continue
                 }
                 if (this.value.indexOf(char) === -1) {
-                  return [false, `Character ${char} must be present - all necessary characters : ${keyVal[1].toString()}`]
+                  return [false, `Character ${char} must be present - all necessary characters are : ${keyVal[1].toString()}`]
                 }
+              }
+              break
+            case 'score':
+              val[0] = Number(val[0].trim())
+              if (isNaN(val[0])) {
+                debugError(`BindedField.parsedConstraints: Invalid non numeric constraint value - ${constraint}`)
+              } else {
+                const passwordScore = scorePassword(this.value)
+                if (passwordScore < val[0]) {
+                  return [false, `Password score must be above ${val[0]} -- currently score is ${passwordScore}`]
+                }
+                okMessage += `Security score: ${passwordScore} `
               }
               break
             default:
@@ -298,7 +348,7 @@ export default class BindedField extends BindedProperty {
               if (!isNumeric(this.value)) { return [false, 'Value must contain only numeric characters'] }
               break
             case 'date':
-              if (parseDate(this.value) === null) { return [false, 'Invalid date format. Use mm/dd/yyyy.'] }
+              if (parseDate(this.value) === null) { return [false, 'Invalid date format. Use dd/mm/yyyy.'] }
               break
             default:
               debugError(`BindedField.parsedConstraints: Invalid constraint - ${constraint}`)
@@ -318,7 +368,7 @@ export default class BindedField extends BindedProperty {
       if ((this.allowedValues.constructor === String) && (this.allowedValues !== this.value)) { return [false, 'Value not allowed'] }
     }
 
-    return [true, 'Ok']
+    return [true, okMessage]
   }
 
   // getters and setters
@@ -368,6 +418,22 @@ export default class BindedField extends BindedProperty {
 
   get error() {
     return null
+  }
+
+  set message(message) {
+    if (this.messageDiv !== null) {
+      if (message) {
+        this.messageDiv.find('.bindedfield-message').text(message)
+        this.messageDiv.show()
+      } else {
+        this.messageDiv.find('.bindedfield-message').text('')
+        this.messageDiv.hide()
+      }
+    }
+  }
+
+  get message() {
+    return null // write only
   }
 
   get parsedConstraints() {
