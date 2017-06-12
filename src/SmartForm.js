@@ -94,10 +94,11 @@ export default class SmartForm extends DragBox {
         title: key,
         baseMessage: '',
       }
-      fields[key] = extend(baseField, fields[key]) // TODO Either migrate to lodash or rewrite an extend function as well a a keys function
+      fields[key] = extend(baseField, fields[key])
       this.fields[key] = fields[key]
-      // TODO Create a form row
       this.fields[key].row = this.newRowInDom(this.fields[key].parent)
+
+      // we bind the value of the field object to the bindedField
       this.fields[key].bindedField = new BindedField(this.fields[key], 'value', this.fields[key].row, this.fields[key].type, this.fields[key].authorizedValues, null,
       { constraints: this.fields[key].constraints, title: this.fields[key].title, baseMessage: this.fields[key].baseMessage }) // TODO transform the call to an option object with parameters
     }

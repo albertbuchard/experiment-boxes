@@ -142,18 +142,6 @@ function scorePassword(pass) {
 }
 
 /**
- * @param  {int} min min delay in ms
- * @param  {int} max max delay in ms
- * @return {promise} promise which will resolve in delay ms
- */
-function jitter(min = mandatory(), max = mandatory()) {
-  return new Promise((resolve) => {
-    const randomDuration = (Math.rand * (max - min)) + min
-    setTimeout(resolve, randomDuration)
-  })
-}
-
-/**
  * From https://stackoverflow.com/questions/948172/password-strength-meter
  * @method checkPassStrength
  * @param  {String}          pass  password
@@ -166,6 +154,18 @@ function passwordStrength(pass) {
   if (score >= 30) { return 'weak' }
 
   return ''
+}
+
+/**
+ * @param  {int} min min delay in ms
+ * @param  {int} max max delay in ms
+ * @return {promise} promise which will resolve in delay ms
+ */
+function jitter(min = mandatory(), max = mandatory()) {
+  return new Promise((resolve) => {
+    const randomDuration = (Math.rand * (max - min)) + min
+    setTimeout(resolve, randomDuration)
+  })
 }
 
 /**
