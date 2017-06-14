@@ -152,7 +152,7 @@ export default class DragBox {
       $(this.boxElement)
         .find('.dragbox-content')
         .css({
-          height: currentContentHeight - difference,
+          height: Math.max(currentContentHeight - difference, 50),
         })
       // $(this.boxElement).height(this.height)
       // const contentHeight = this.height - this.TITLE_HEIGHT - this.FOOTER_HEIGHT - 7
