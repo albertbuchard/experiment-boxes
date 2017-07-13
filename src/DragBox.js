@@ -103,12 +103,8 @@ export default class DragBox {
     this.overflow = 'hidden'
 
     // keyboard show hide hotkeys events
-    $(document.body).keydown((e) => {
-      thisObject.keyfunction(e)
-    })
-    $(document.body).keyup((e) => {
-      thisObject.keyfunction(e)
-    })
+    document.body.addEventListener('keydown', this.keyfunction)
+    document.body.addEventListener('keyup', this.keyfunction)
 
     // when clicked bring  dragbox
     $(this.boxElement).click(() => {
@@ -124,9 +120,7 @@ export default class DragBox {
     })
 
     // draggin cleanUp event
-    $(document).click((e) => {
-      thisObject.stopDrag(e)
-    })
+    document.body.addEventListener('click', this.stopDrag)
 
     /* --- Load the query string if reload and import was used --- */
     this.queryString = DragBox.getQueryString()
@@ -138,6 +132,9 @@ export default class DragBox {
     $(this.boxElement).animate({
       opacity: 0,
     }, 25, () => {
+      document.body.addEventListener('keydown', this.keyfunction)
+      document.body.addEventListener('keyup', this.keyfunction)
+      document.body.removeEventListener('click', this.stopDrag)
       $(thisObject.boxElement).remove()
     })
   }
