@@ -37,6 +37,7 @@ export default class BindedField extends BindedProperty {
     this.parent = parent
 
     // build the field html based on the fieldType: input, select, textaera, slider, radio
+    const idRadio = $('input[type="radio"]').length
     let html = ''
     switch (this.fieldType) {
       case 'input':
@@ -114,11 +115,12 @@ export default class BindedField extends BindedProperty {
           debugError('fieldType selector needs at least one allowedValues')
           return
         }
+
         html = `<fieldset class="form-group"><label class="bindedfield-label">${this.title}</label>`
         for (const value of this.allowedValues) {
           html += `<div class="form-check">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input ${this.tempClass}" name="${property}" value="${value}" data-binded="${property}" checked>
+              <input type="radio" class="form-check-input ${this.tempClass}" name="${property}${idRadio}" value="${value}" data-binded="${property}" checked>
               ${value}
             </label>
           </div> `

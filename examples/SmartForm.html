@@ -62,6 +62,13 @@
                  authorizedValues: ['Male', 'Female'], // athorized values
                  parent: null,
                },
+               happy: {
+                 type: 'radio', //field type: input, select, textaera, slider, radio
+                 constraints: '', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
+                 authorizedValues: ['Yes', 'No'], // athorized values
+                 parent: null,
+                 title: 'Are you happy ?'
+               },
                married: {
                  type: 'select', //field type: input, select, textaera, slider, radio
                  constraints: 'alpha; length:2,20', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
@@ -78,9 +85,9 @@
                pain: {
                  type: 'slider', //field type: input, select, textaera, slider, radio
                  constraints: '', // list of constraints that will be automatically verified: mandatory; alpha; numeric; length:XX; contains:a,b,@,.;
-                 authorizedValues: [0, 10, 1], // athorized values
+                 authorizedValues: [0, 100, 1], // athorized values
                  parent: null,
-                 title: 'Pain from 0 to 10'
+                 title: 'Pain from 0 to 100'
                },
                biography: {
                  type: 'textaera', //field type: input, select, textaera, slider, radio
